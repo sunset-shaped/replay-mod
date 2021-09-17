@@ -1,6 +1,186 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://replay-mod.gd" type="Script" id=1]
+[ext_resource path="res://TextureButton.gd" type="Script" id=1]
+[ext_resource path="res://christmas lights.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://color-gradient.tres" type="Texture" id=3]
+[ext_resource path="res://player.png" type="Texture" id=4]
+[ext_resource path="res://replay-mod.gd" type="Script" id=5]
 
-[node name="replay-mod" type="Node2D"]
+[sub_resource type="DynamicFont" id=1]
+size = 90
+use_mipmaps = true
+font_data = ExtResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 1, 1, 1, 0 )
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="DynamicFont" id=3]
+size = 32
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 69
+font_data = ExtResource( 2 )
+
+[sub_resource type="ParticlesMaterial" id=5]
+emission_shape = 1
+emission_sphere_radius = 30.0
+flag_disable_z = true
+gravity = Vector3( 0, 98, 0 )
+initial_velocity = 20.0
+initial_velocity_random = 1.0
+angular_velocity = 20.0
+angular_velocity_random = 1.0
+orbit_velocity = 1.0
+orbit_velocity_random = 1.0
+angle = 720.0
+angle_random = 1.0
+color_ramp = ExtResource( 3 )
+
+[node name="replay-mod" type="CanvasLayer"]
+layer = 10
+
+[node name="replay-mod" type="Node2D" parent="."]
+script = ExtResource( 5 )
+
+[node name="ColorRect" type="ColorRect" parent="replay-mod"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 1024.0
+margin_bottom = 600.0
+color = Color( 0.427451, 0.407843, 0.458824, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="replay-mod"]
+margin_top = 8.0
+margin_right = 1024.0
+margin_bottom = 128.0
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "[center]replays"
+text = "replays"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OptionButton" type="OptionButton" parent="replay-mod"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 277.0
+margin_top = 152.0
+margin_right = 740.0
+margin_bottom = 221.0
+focus_mode = 0
+custom_styles/normal = SubResource( 2 )
+custom_fonts/font = SubResource( 3 )
+enabled_focus_mode = 0
+text = "No replays available"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="open" type="TextureButton" parent="replay-mod"]
+margin_left = 166.159
+margin_top = 285.794
+margin_right = 379.159
+margin_bottom = 352.794
+focus_neighbour_right = NodePath("../delete")
+focus_neighbour_bottom = NodePath("../delete")
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="replay-mod/open"]
+margin_right = 211.0
+margin_bottom = 75.0
+custom_fonts/normal_font = SubResource( 4 )
+bbcode_enabled = true
+bbcode_text = "[center]open"
+text = "open"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Particles2D" type="Particles2D" parent="replay-mod/open"]
+position = Vector2( 0, 32 )
+process_material = SubResource( 5 )
+texture = ExtResource( 4 )
+
+[node name="delete" type="TextureButton" parent="replay-mod"]
+margin_left = 390.159
+margin_top = 349.794
+margin_right = 603.159
+margin_bottom = 416.794
+focus_neighbour_right = NodePath("../back")
+focus_neighbour_bottom = NodePath("../back")
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="replay-mod/delete"]
+margin_left = 24.0
+margin_right = 235.0
+margin_bottom = 75.0
+custom_fonts/normal_font = SubResource( 4 )
+bbcode_enabled = true
+bbcode_text = "[center]delete"
+text = "delete"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Particles2D" type="Particles2D" parent="replay-mod/delete"]
+position = Vector2( 0, 32 )
+process_material = SubResource( 5 )
+texture = ExtResource( 4 )
+
+[node name="back" type="TextureButton" parent="replay-mod"]
+margin_left = 678.159
+margin_top = 413.794
+margin_right = 891.159
+margin_bottom = 480.794
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="replay-mod/back"]
+margin_right = 211.0
+margin_bottom = 75.0
+custom_fonts/normal_font = SubResource( 4 )
+bbcode_enabled = true
+bbcode_text = "[center]back"
+text = "back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Particles2D" type="Particles2D" parent="replay-mod/back"]
+position = Vector2( 0, 32 )
+process_material = SubResource( 5 )
+texture = ExtResource( 4 )
+
+[connection signal="focus_entered" from="replay-mod/open" to="replay-mod/open" method="_on_TextureButton_focus_entered"]
+[connection signal="focus_exited" from="replay-mod/open" to="replay-mod/open" method="_on_TextureButton_focus_exited"]
+[connection signal="pressed" from="replay-mod/open" to="replay-mod/open" method="_on_TextureButton_pressed"]
+[connection signal="focus_entered" from="replay-mod/delete" to="replay-mod/open" method="_on_TextureButton_focus_entered"]
+[connection signal="focus_exited" from="replay-mod/delete" to="replay-mod/open" method="_on_TextureButton_focus_exited"]
+[connection signal="pressed" from="replay-mod/delete" to="replay-mod/open" method="_on_TextureButton_pressed"]
+[connection signal="focus_entered" from="replay-mod/back" to="replay-mod/open" method="_on_TextureButton_focus_entered"]
+[connection signal="focus_exited" from="replay-mod/back" to="replay-mod/open" method="_on_TextureButton_focus_exited"]
+[connection signal="pressed" from="replay-mod/back" to="replay-mod/open" method="_on_TextureButton_pressed"]
