@@ -56,6 +56,7 @@ func _process(delta):
 		menushowing = false
 	if Input.is_action_just_released("replay_menu"):
 		if menushowing:
+			$open.grab_focus()
 			self.visible = true
 			base.menu._hideall()
 

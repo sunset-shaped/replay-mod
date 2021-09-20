@@ -49,6 +49,7 @@ color_ramp = ExtResource( 3 )
 layer = 10
 
 [node name="replay-mod" type="Node2D" parent="."]
+visible = false
 script = ExtResource( 5 )
 
 [node name="ColorRect" type="ColorRect" parent="replay-mod"]
@@ -93,12 +94,16 @@ __meta__ = {
 }
 
 [node name="open" type="TextureButton" parent="replay-mod"]
-margin_left = 166.159
+margin_left = 181.159
 margin_top = 285.794
-margin_right = 379.159
+margin_right = 394.159
 margin_bottom = 352.794
+focus_neighbour_left = NodePath("../back")
+focus_neighbour_top = NodePath("../back")
 focus_neighbour_right = NodePath("../delete")
 focus_neighbour_bottom = NodePath("../delete")
+focus_next = NodePath("../delete")
+focus_previous = NodePath("../back")
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -121,12 +126,16 @@ process_material = SubResource( 5 )
 texture = ExtResource( 4 )
 
 [node name="delete" type="TextureButton" parent="replay-mod"]
-margin_left = 390.159
+margin_left = 405.159
 margin_top = 349.794
-margin_right = 603.159
+margin_right = 618.159
 margin_bottom = 416.794
+focus_neighbour_left = NodePath("../open")
+focus_neighbour_top = NodePath("../open")
 focus_neighbour_right = NodePath("../back")
 focus_neighbour_bottom = NodePath("../back")
+focus_next = NodePath("../back")
+focus_previous = NodePath("../open")
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -150,10 +159,16 @@ process_material = SubResource( 5 )
 texture = ExtResource( 4 )
 
 [node name="back" type="TextureButton" parent="replay-mod"]
-margin_left = 678.159
+margin_left = 693.159
 margin_top = 413.794
-margin_right = 891.159
+margin_right = 906.159
 margin_bottom = 480.794
+focus_neighbour_left = NodePath("../delete")
+focus_neighbour_top = NodePath("../delete")
+focus_neighbour_right = NodePath("../open")
+focus_neighbour_bottom = NodePath("../open")
+focus_next = NodePath("../open")
+focus_previous = NodePath("../delete")
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
