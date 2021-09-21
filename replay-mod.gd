@@ -23,7 +23,7 @@ func _ready():
 	InputMap.add_action("replay_menu")
 	InputMap.action_add_event("replay_menu", f7_key)
 	base = get_node("/root/base")
-	base.menu.connect("end_text", self, "save_replay")
+	print(base.menu.connect("end_text", self, "save_replay"))
 	player = base.player
 	var dir =  Directory.new()
 	dir.open("user://")
@@ -61,10 +61,13 @@ func _process(delta):
 			base.menu._hideall()
 
 func save_replay():
+	print("got to save")
 	var replay = File.new()
+	print(replay)
 	timeDict = OS.get_datetime()
 	savetime = str(timeDict["hour"] , "-" , timeDict["minute"] , "-" , timeDict["second"] , "-" , timeDict["day"] , "-" , timeDict["month"] , "-" , timeDict["year"])
-	replay.open(savetime + ".ssreplay", File.WRITE)
+	print(savetime)
+	replay.open("user://replays/replay" + "-" + savetime + ".ssreplay", File.WRITE)
 	replay.store_line(str(times))
 	replay.close()
 	
