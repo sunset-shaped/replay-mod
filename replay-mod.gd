@@ -4,20 +4,29 @@ var base:Node
 var player:Node
 var camera:Node
 
+var level
 var times = []
-var positions = []
+var positions_x = []
+var positions_y = []
+
 var replays = []
-var buttons = []
 
-var timeDict
-var savetime
-var menushowing
+var loadedlevel
+var loadedtimes = []
+var loadedpositions_x = []
+var loadedpositions_y = []
 
+var ii = 0
+
+var replaying
+
+var loadedreplay = File.new()
 var loadingreplay = File.new()
 var f7_key = InputEventKey.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	replaying = false
 	f7_key.scancode = KEY_F7
 	self.visible = false
 	InputMap.add_action("replay_menu")
@@ -49,25 +58,42 @@ func _ready():
 func _process(delta):
 	if base.state == "play":
 		times.append(base.timer)
-		positions.append(player.position)
-	if base.menu.visible == true:
-		menushowing = true
-	else:
-		menushowing = false
+		positions_x.append(player.position.x)
+		positions_y.append(player.position.y)
 	if Input.is_action_just_released("replay_menu"):
-		if menushowing:
+		if base.menu.visible:
 			$open.grab_focus()
 			self.visible = true
 			base.menu._hideall()
 
+func _physics_process(_delta):
+	if replaying:
+		player.position = Vector2(loadedpositions_x[ii], loadedpositions_y[ii])
+		ii += 1
+
 func save_replay():
-	print("got to save")
+	level = base.level
 	var replay = File.new()
-	print(replay)
-	timeDict = OS.get_datetime()
-	savetime = str(timeDict["hour"] , "-" , timeDict["minute"] , "-" , timeDict["second"] , "-" , timeDict["day"] , "-" , timeDict["month"] , "-" , timeDict["year"])
-	print(savetime)
+	var timeDict = OS.get_datetime()
+	var savetime = str(timeDict["hour"] , "-" , timeDict["minute"] , "-" , timeDict["second"] , "-" , timeDict["day"] , "-" , timeDict["month"] , "-" , timeDict["year"])
 	replay.open("user://replays/replay" + "-" + savetime + ".ssreplay", File.WRITE)
-	replay.store_line(str(times))
+	replay.store_line(str(level))
+	replay.store_line(to_json(times))
+	replay.store_line(to_json(positions_x))
+	replay.store_line(to_json(positions_y))
 	replay.close()
-	
+
+func _on_delete_pressed():
+	var dir = Directory.new()
+	dir.remove("user://replays/" + $OptionButton.get_item_text($OptionButton.get_selected()) + ".ssreplay")
+
+func _on_open_pressed():
+	ii = 0
+	loadedreplay.open("user://replays/" + $OptionButton.get_item_text($OptionButton.get_selected()) + ".ssreplay", File.READ)
+	loadedlevel = int(loadedreplay.get_line())
+	loadedtimes = parse_json(loadedreplay.get_line())
+	loadedpositions_x = parse_json(loadedreplay.get_line())
+	loadedpositions_y = parse_json(loadedreplay.get_line())
+	self.visible = false
+	base._playlevel(loadedlevel)
+	replaying = true
