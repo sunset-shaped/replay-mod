@@ -190,6 +190,9 @@ position = Vector2( 0, 32 )
 process_material = SubResource( 5 )
 texture = ExtResource( 4 )
 
+[node name="WiggleTimeout" type="Timer" parent="replay-mod"]
+wait_time = 3.0
+
 [connection signal="focus_entered" from="replay-mod/open" to="replay-mod/open" method="_on_TextureButton_focus_entered"]
 [connection signal="focus_exited" from="replay-mod/open" to="replay-mod/open" method="_on_TextureButton_focus_exited"]
 [connection signal="pressed" from="replay-mod/open" to="replay-mod" method="_on_open_pressed"]
@@ -200,5 +203,6 @@ texture = ExtResource( 4 )
 [connection signal="pressed" from="replay-mod/delete" to="replay-mod/delete" method="_on_TextureButton_pressed"]
 [connection signal="focus_entered" from="replay-mod/back" to="replay-mod/back" method="_on_TextureButton_focus_entered"]
 [connection signal="focus_exited" from="replay-mod/back" to="replay-mod/back" method="_on_TextureButton_focus_exited"]
-[connection signal="pressed" from="replay-mod/back" to="replay-mod/back" method="_on_back_pressed"]
 [connection signal="pressed" from="replay-mod/back" to="replay-mod/back" method="_on_TextureButton_pressed"]
+[connection signal="pressed" from="replay-mod/back" to="replay-mod/back" method="_on_back_pressed"]
+[connection signal="timeout" from="replay-mod/WiggleTimeout" to="replay-mod" method="_on_WiggleTimeout_timeout"]

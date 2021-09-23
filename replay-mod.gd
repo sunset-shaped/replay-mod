@@ -19,6 +19,8 @@ var loadedpositions_y = []
 var ii = 0
 
 var replaying = false
+var paused = false
+var speed = 1
 
 var loadedreplay = File.new()
 var loadingreplay = File.new()
@@ -59,6 +61,10 @@ func _ready():
 func end_replay():
 	ii = 0
 	replaying = false
+	base.set_hud_text("replay1", "")
+	base.set_hud_text("replay2", "")
+	base.set_hud_text("replay3", "")
+	base.player.gravity = 2800
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -73,9 +79,9 @@ func _process(delta):
 			base.menu._hideall()
 
 func _physics_process(_delta):
-	if replaying && base.state == "play":
+	if replaying && base.state == "play" && not paused:
 		player.position = Vector2(loadedpositions_x[ii], loadedpositions_y[ii])
-		ii += 1
+		ii = clamp(ii + speed, 0, loadedpositions_x.size() - 1)
 
 func save_replay():
 	if base.mode == "level":
@@ -98,14 +104,44 @@ func _on_delete_pressed():
 
 func _on_open_pressed():
 	ii = 0
-	loadedreplay.open("user://replays/" + $OptionButton.get_item_text($OptionButton.get_selected()) + ".ssreplay", File.READ)
-	loadedlevel = int(loadedreplay.get_line())
-	loadedtimes = parse_json(loadedreplay.get_line())
-	loadedpositions_x = parse_json(loadedreplay.get_line())
-	loadedpositions_y = parse_json(loadedreplay.get_line())
-	self.visible = false
-	if loadedlevel == -1:
-		base._play()
-	else:
-		base._playlevel(loadedlevel)
-	replaying = true
+	if $OptionButton.get_selected() != -1:
+		loadedreplay.open("user://replays/" + $OptionButton.get_item_text($OptionButton.get_selected()) + ".ssreplay", File.READ)
+		loadedlevel = int(loadedreplay.get_line())
+		loadedtimes = parse_json(loadedreplay.get_line())
+		loadedpositions_x = parse_json(loadedreplay.get_line())
+		loadedpositions_y = parse_json(loadedreplay.get_line())
+		self.visible = false
+		if loadedlevel == -1:
+			base._play()
+		else:
+			base._playlevel(loadedlevel)
+		replaying = true
+	base.player.gravity = 0
+	base.set_hud_text("replay1", "← and → to skip,")
+	base.set_hud_text("replay2", "+ and - to modify speed,")
+	base.set_hud_text("replay3", "space to pause and resume")
+	$WiggleTimeout.start()
+
+func _input(event):
+	if event is InputEventMouseMotion:
+		base.set_hud_text("replay1", "← and → to skip,")
+		base.set_hud_text("replay2", "+ and - to modify speed,")
+		base.set_hud_text("replay3", "space to pause and resume")
+		$WiggleTimeout.start()
+	if event is InputEventKey and replaying:
+		if event.pressed and event.scancode == KEY_RIGHT and !paused:
+			ii += 100
+		if event.pressed and event.scancode == KEY_LEFT and !paused:
+			ii -= 100
+		if event.pressed and event.scancode == KEY_SPACE:
+			paused = !paused
+		if event.pressed and event.scancode == KEY_EQUAL:
+			speed = clamp(speed + 1, 1, 5)
+		if event.pressed and event.scancode == KEY_MINUS:
+			speed = clamp(speed - 1, 1, 5)
+		
+func _on_WiggleTimeout_timeout():
+	base.set_hud_text("replay1", "")
+	base.set_hud_text("replay2", "")
+	base.set_hud_text("replay3", "")
+	
